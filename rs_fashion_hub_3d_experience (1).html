@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS Fashion Hub | Royal & Classic Menswear Store</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js for 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for Smooth Transitions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        royalGold: {
+                            light: '#f3e5ab',
+                            DEFAULT: '#d4af37',
+                            dark: '#aa7c11',
+                            shimmer: '#f9e7b9'
+                        },
+                        obsidian: '#0a0a0c',
+                        velvetBlue: '#0c1020',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom Smooth Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 9999px;
+        }
+        
+        /* Floating animations for luxurious visual depth */
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        @keyframes float-medium {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(-4deg); }
+        }
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
+        }
+        
+        .animate-float-1 { animation: float-slow 8s ease-in-out infinite; }
+        .animate-float-2 { animation: float-medium 11s ease-in-out infinite; }
+        .pulse-gold-glow { animation: pulse-gold 4s infinite; }
+
+        /* Luxury Glassmorphism - Extra Soft Rounded Borders */
+        .luxury-glass {
+            background: rgba(12, 16, 32, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 2rem; /* No sharp edges anywhere */
+        }
+        
+        .luxury-glass:hover {
+            border-color: rgba(212, 175, 55, 0.35);
+            box-shadow: 0 15px 35px -10px rgba(212, 175, 55, 0.2);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glow-blob {
+            filter: blur(140px);
+            opacity: 0.22;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Slide-out cabinet transitions */
+        .cabinet-active {
+            transform: translateX(0%) !important;
+        }
+    </style>
+</head>
+<body class="bg-obsidian text-slate-100 overflow-x-hidden font-sans selection:bg-royalGold selection:text-obsidian">
+
+    <!-- Premium Toast / Live Notifications -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-slate-900 border-royalGold/30 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-[-100px] opacity-0 pointer-events-none">
+        <span id="toast-icon" class="text-royalGold text-lg"><i class="fa-solid fa-bell"></i></span>
+        <span id="toast-text" class="text-xs font-semibold uppercase tracking-wider text-slate-200">Processing...</span>
+    </div>
+
+    <!-- Custom Luxury Confirmation Modal (Replaces Browser Confirm Alerts) -->
+    <div id="confirm-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-obsidian/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="luxury-glass max-w-sm w-full p-6 text-center border border-royalGold/20">
+            <div class="w-12 h-12 bg-rose-500/10 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h4 class="font-serif text-lg font-bold text-slate-100 mb-2">Are you sure?</h4>
+            <p id="confirm-modal-text" class="text-xs text-slate-400 mb-6">This action cannot be undone.</p>
+            <div class="flex gap-3">
+                <button id="confirm-modal-cancel" class="flex-1 py-2.5 bg-slate-950 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold uppercase">Cancel</button>
+                <button id="confirm-modal-ok" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold uppercase">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive 3D Background Canvas -->
+    <canvas id="threejs-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"></canvas>
+
+    <!-- Warm Glowing Ambient Blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-royalGold glow-blob -z-20"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-velvetBlue glow-blob -z-20"></div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-40 px-4 py-3 md:py-5 transition-all duration-300" id="main-header">
+        <nav class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 luxury-glass bg-obsidian/75 rounded-full shadow-lg border border-royalGold/10">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <span class="font-serif text-xl md:text-2xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-royalGold via-royalGold-shimmer to-royalGold-dark">
+                    RS FASHION HUB
+                </span>
+            </a>
+            
+            <!-- Menu Links -->
+            <div class="hidden lg:flex items-center gap-8 text-[11px] uppercase tracking-widest font-semibold">
+                <a href="#hero" class="text-royalGold hover:text-white transition-colors">Home</a>
+                <a href="#collections" class="hover:text-royalGold transition-colors">Collections</a>
+                <a href="#about" class="hover:text-royalGold transition-colors">Royal Craft</a>
+                <a href="#contact" class="hover:text-royalGold transition-colors">Showroom</a>
+            </div>
+
+            <!-- Header Quick Call Button -->
+            <div>
+                <a href="tel:8928703606" class="flex items-center gap-2 bg-gradient-to-r from-royalGold-dark to-royalGold px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest text-obsidian hover:shadow-lg transition-all border border-royalGold-light/20">
+                    <i class="fa-solid fa-phone"></i> Call Now
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center px-4 pt-24 pb-12 overflow-hidden">
+        <div class="max-w-5xl mx-auto text-center z-10">
+            <div class="mb-6 inline-flex justify-center items-center p-4 bg-gradient-to-b from-royalGold/20 to-transparent rounded-full border border-royalGold/30 animate-float-1">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
+                    <path d="M12 2L15 8L22 9L17 14L18 21L12 17L6 21L7 14L2 9L9 8L12 2Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight leading-none mb-6">
+                Royal Aesthetics <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-royalGold via-royalGold-shimmer to-royalGold-dark italic">Tailored for Kings</span>
+            </h1>
+            
+            <p class="max-w-2xl mx-auto text-slate-300 text-sm md:text-md tracking-wide leading-relaxed mb-10 font-light">
+                Premium custom tailoring and exclusive readymade menswear designs. Select your variant below and tap to secure instant booking details straight via WhatsApp messenger.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#collections" class="w-full sm:w-auto px-8 py-4 rounded-3xl bg-gradient-to-r from-royalGold via-royalGold-shimmer to-royalGold-dark text-obsidian font-bold tracking-widest text-xs uppercase hover:shadow-2xl hover:shadow-royalGold/40 transition-all duration-300 text-center">
+                    Browse Collections <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-3xl bg-slate-900/40 backdrop-blur-md border border-royalGold/20 text-royalGold hover:bg-royalGold hover:text-obsidian font-bold tracking-widest text-xs uppercase transition-all duration-300 text-center">
+                    Visit Location <i class="fa-solid fa-map-location-dot ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE CATALOG / REAL-TIME PRODUCTS SECTION -->
+    <section id="collections" class="py-24 px-4 max-w-7xl mx-auto relative z-10">
+        <div class="text-center mb-16">
+            <span class="text-royalGold text-xs font-semibold tracking-widest uppercase block mb-3">— DESIGNER CATALOG —</span>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight">The Royal Selection</h2>
+            <p class="text-slate-400 text-sm mt-2">Tap any luxury look to configure parameters and order instantly via WhatsApp.</p>
+            <div class="w-24 h-[2px] bg-gradient-to-r from-transparent via-royalGold to-transparent mx-auto mt-4"></div>
+        </div>
+
+        <!-- Stable Dynamic Product Catalog Container -->
+        <div id="product-catalog-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+            <!-- Rendered stably via local memory arrays below -->
+        </div>
+    </section>
+
+    <!-- THE ROYAL STANDARD -->
+    <section id="about" class="py-20 px-4 max-w-7xl mx-auto relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <span class="text-royalGold text-xs font-semibold tracking-widest uppercase block">— BESPOKE FITTING —</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight leading-tight">Crafting Your Elegant Identity</h2>
+                <p class="text-slate-300 leading-relaxed font-light text-sm">
+                    Clothing is your visual calling card. Our design room blends age-old traditional craftsmanship with ultra-sharp modern silhouettes. Every outfit is crafted using materials of premium origin.
+                </p>
+
+                <div class="grid sm:grid-cols-2 gap-4 pt-4">
+                    <div class="p-5 luxury-glass bg-obsidian/30 flex items-start gap-4">
+                        <div class="text-royalGold text-2xl mt-1"><i class="fa-solid fa-scissors"></i></div>
+                        <div>
+                            <h4 class="font-serif text-lg font-bold text-slate-200">Exquisite Tailoring</h4>
+                            <p class="text-slate-400 text-[11px] leading-relaxed mt-1">Symmetrical alignments custom made for perfect posture styling.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5 luxury-glass bg-obsidian/30 flex items-start gap-4">
+                        <div class="text-royalGold text-2xl mt-1"><i class="fa-solid fa-gem"></i></div>
+                        <div>
+                            <h4 class="font-serif text-lg font-bold text-slate-200">Royal Accents</h4>
+                            <p class="text-slate-400 text-[11px] leading-relaxed mt-1">Premium metallic stitchings, custom buttons, and elegant silks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consult Stylist Card -->
+            <div class="relative flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-gradient-to-tr from-royalGold/10 via-transparent to-velvetBlue/40 rounded-[2.5rem] filter blur-xl"></div>
+                <div class="relative w-full max-w-md luxury-glass p-8 text-center pulse-gold-glow border border-royalGold/20">
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-tr from-royalGold-dark to-royalGold rounded-full flex items-center justify-center text-obsidian font-bold text-lg">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl font-bold mt-4 mb-3 text-royalGold">Consult Our Stylist</h3>
+                    <p class="text-slate-300 text-xs leading-relaxed mb-6">
+                        Need help finding your exact size or designing a custom wedding outfit? Connect directly with our lead tailor in Kalyan.
+                    </p>
+                    <div class="space-y-3">
+                        <a href="tel:8928703606" class="w-full py-3.5 flex items-center justify-center gap-3 bg-gradient-to-r from-royalGold to-amber-500 rounded-2xl text-obsidian font-bold text-xs tracking-widest uppercase transition-transform hover:scale-[1.02]">
+                            <i class="fa-solid fa-phone"></i> Direct Call: 8928703606
+                        </a>
+                        <a href="https://wa.me/918928703606?text=Hi!%20I'd%20like%20to%20book%20a%20private%20custom%20clothing%20fitting%20appointment." target="_blank" rel="noopener noreferrer" class="w-full py-3.5 flex items-center justify-center gap-3 bg-slate-900/80 rounded-2xl border border-royalGold/20 hover:border-royalGold text-royalGold font-bold text-xs tracking-widest uppercase transition-transform hover:scale-[1.02]">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Inquire via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOWROOM LOCATION SECTION -->
+    <section id="contact" class="py-20 px-4 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-royalGold text-xs font-semibold tracking-widest uppercase block mb-2">— ATELIER MAP —</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight">Kalyan Showroom</h2>
+                <div class="w-24 h-[2px] bg-gradient-to-r from-transparent via-royalGold to-transparent mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+                <!-- Contact Details -->
+                <div class="lg:col-span-5 luxury-glass p-8 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-serif text-2xl font-bold text-slate-100 mb-6">RS FASHION HUB</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="w-11 h-11 bg-royalGold/10 border border-royalGold/30 text-royalGold flex items-center justify-center rounded-full shrink-0">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-slate-400">Atelier Location</p>
+                                    <p class="text-slate-200 text-sm mt-1 leading-relaxed">
+                                        Kalyan, Maharashtra, India.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-11 h-11 bg-royalGold/10 border border-royalGold/30 text-royalGold flex items-center justify-center rounded-full shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-slate-400">Call Details</p>
+                                    <a href="tel:8928703606" class="text-royalGold text-md font-medium mt-1 inline-block hover:underline">
+                                        +91 89287 03606
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-royalGold/10 mt-8">
+                        <p class="text-[9px] tracking-widest uppercase text-slate-400 mb-1">Showroom Hours</p>
+                        <p class="text-slate-200 text-xs font-semibold">Open Daily: 11:00 AM — 9:30 PM</p>
+                    </div>
+                </div>
+
+                <!-- Google Maps Card -->
+                <div class="lg:col-span-7 luxury-glass p-6 flex flex-col justify-between gap-6 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-0"></div>
+                    <div class="relative z-10 flex flex-col h-full justify-between gap-6">
+                        <div>
+                            <span class="text-royalGold text-xs font-semibold tracking-widest uppercase block">Verified Map Hub</span>
+                            <h4 class="font-serif text-xl font-bold text-slate-200 mt-1">Direct Google Maps Route</h4>
+                            <p class="text-slate-400 text-xs mt-1">Access verified navigation links for easy customer transit.</p>
+                        </div>
+                        
+                        <div class="relative h-44 rounded-2xl bg-slate-900 border border-royalGold/15 overflow-hidden flex items-center justify-center group-hover:border-royalGold/30 transition-all">
+                            <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                            <div class="relative text-center z-10 flex flex-col items-center">
+                                <div class="w-14 h-14 bg-gradient-to-tr from-royalGold-dark to-royalGold text-obsidian rounded-full flex items-center justify-center text-xl shadow-xl animate-bounce mb-3">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <span class="text-xs tracking-widest uppercase text-royalGold font-bold">Launch Kalyan Store</span>
+                            </div>
+                        </div>
+
+                        <a href="https://maps.app.goo.gl/qb17QzEQoFpdjQgQA" target="_blank" rel="noopener noreferrer" class="w-full py-4 bg-gradient-to-r from-royalGold-dark to-royalGold text-obsidian font-extrabold text-xs tracking-widest uppercase rounded-2xl shadow-lg hover:scale-[1.01] transition-transform text-center">
+                            Launch Map Directions <i class="fa-solid fa-map-location-dot ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLOATING CONTACT QUICK-BAR -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-[90%] max-w-lg luxury-glass bg-obsidian/90 p-3 flex justify-between items-center shadow-2xl border border-royalGold/25">
+        <div class="flex items-center gap-3 pl-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
+            <div>
+                <p class="text-[9px] tracking-widest uppercase text-slate-400">Atelier Live Support</p>
+                <p class="font-serif text-xs font-bold text-royalGold">RS Fashion Hub</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="tel:8928703606" class="px-4 py-2.5 bg-gradient-to-r from-royalGold-dark to-royalGold text-obsidian rounded-xl text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 transition-transform hover:scale-105">
+                <i class="fa-solid fa-phone"></i> Call
+            </a>
+            <a href="https://wa.me/918928703606" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 transition-transform hover:scale-105">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- FLOATING ADMIN ENTRY POINT LOCK ICON -->
+    <div class="fixed bottom-24 right-6 z-40">
+        <button onclick="openAdminAccessModal()" class="w-12 h-12 rounded-full bg-slate-950 border-2 border-royalGold text-royalGold hover:bg-royalGold hover:text-obsidian flex items-center justify-center text-lg shadow-xl pulse-gold-glow transition-all" title="Admin Control Room">
+            <i class="fa-solid fa-lock"></i>
+        </button>
+    </div>
+
+    <!-- ADMIN PASSWORD ACCESS DIALOG -->
+    <div id="admin-pass-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="luxury-glass max-sm w-full bg-slate-950 border-royalGold/30 p-8 relative text-center">
+            <button onclick="closeAdminAccessModal()" class="absolute top-6 right-6 text-slate-400 hover:text-royalGold text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 bg-royalGold/10 text-royalGold rounded-full flex items-center justify-center text-xl mx-auto mb-4 border border-royalGold/20">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-slate-100">Admin Authentication</h3>
+            <p class="text-slate-400 text-[10px] uppercase tracking-widest mt-1 mb-6">Enter secure credentials</p>
+
+            <form onsubmit="verifyAdminPassword(event)" class="space-y-4">
+                <input type="password" id="admin-password-field" required class="w-full bg-slate-900 border border-royalGold/20 rounded-xl p-3 text-xs text-center text-slate-200 focus:outline-none focus:border-royalGold" placeholder="Enter Access Key...">
+                <p class="text-[9px] text-slate-500 leading-normal">Default system authorization code: <strong class="text-royalGold">rsadmin7036</strong></p>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-royalGold to-amber-500 text-obsidian text-xs font-bold tracking-widest uppercase rounded-xl">
+                    Authorize Access
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FULL ADMIN CONTROL CABINET (DYNAMIC DRAWER PANEL) -->
+    <div id="admin-cabinet" class="fixed top-0 left-0 h-full w-full lg:w-[650px] z-50 bg-obsidian/98 border-r border-royalGold/20 -translate-x-full transition-transform duration-500 ease-out flex flex-col shadow-2xl justify-between">
+        <!-- Cabinet Header -->
+        <div class="p-6 border-b border-royalGold/15 flex justify-between items-center bg-slate-950">
+            <div>
+                <h3 class="font-serif text-xl font-bold text-royalGold flex items-center gap-2">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Atelier Master Control
+                </h3>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">RS Fashion Hub Admin Panel</p>
+            </div>
+            <button onclick="closeAdminCabinet()" class="text-slate-400 hover:text-royalGold text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Cabinet Active Workspace Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <!-- TAB: PRODUCTS PANEL -->
+            <div id="admin-tab-products" class="space-y-6">
+                <!-- Add product form trigger header -->
+                <div class="luxury-glass p-5 border-royalGold/20 bg-slate-900/30">
+                    <h4 class="font-serif text-md font-bold text-slate-200 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-royalGold"></i> Add/Edit Luxury Apparel
+                    </h4>
+                    
+                    <form id="add-product-form" onsubmit="addOrUpdateProduct(event)" class="space-y-3">
+                        <input type="hidden" id="admin-prod-id">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Outfit Title</label>
+                                <input type="text" id="admin-prod-title" required class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold" placeholder="e.g. Royal Silk Sherwani">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Pricing (INR)</label>
+                                <input type="number" id="admin-prod-price" required class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold" placeholder="e.g. 18500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Luxury Category</label>
+                                <select id="admin-prod-category" class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold">
+                                    <option value="Exclusive Sherwanis">Imperial Sherwanis</option>
+                                    <option value="Classic Suits">Monarch Suits</option>
+                                    <option value="Premium Casuals">Heritage Casuals</option>
+                                    <option value="Bespoke Couture">Bespoke Couture</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Upload Photo (Mobile Gallery/Camera)</label>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="document.getElementById('admin-prod-file-input').click()" class="w-full py-2.5 bg-slate-950 border border-royalGold/30 hover:border-royalGold rounded-xl text-xs font-semibold text-royalGold flex items-center justify-center gap-2 transition-all">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Select Photo
+                                    </button>
+                                    <input type="file" id="admin-prod-file-input" accept="image/*" class="hidden" onchange="compressAndPreviewFile(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Compression Thumbnail Preview Area -->
+                        <div id="admin-img-preview-container" class="hidden p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center gap-4">
+                            <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-royalGold/20">
+                                <img id="admin-img-preview-tag" src="" class="w-full h-full object-cover">
+                                <button type="button" onclick="clearSelectedPhoto()" class="absolute top-0 right-0 w-5 h-5 bg-rose-600/90 text-white rounded-bl-lg flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-300 uppercase">Compressed Successfully</p>
+                                <p id="admin-img-preview-size" class="text-[9px] text-royalGold mt-0.5">Size: 0 KB</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Product Description</label>
+                            <textarea id="admin-prod-desc" required rows="2" class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold" placeholder="Premium features of the fabric & detailing..."></textarea>
+                        </div>
+
+                        <div class="flex gap-2 pt-2">
+                            <button type="submit" id="product-form-submit" class="flex-1 py-3 bg-gradient-to-r from-royalGold to-amber-500 text-obsidian text-xs font-bold tracking-widest uppercase rounded-xl">
+                                Create Entry
+                            </button>
+                            <button type="button" onclick="resetAdminProductForm()" class="px-4 py-3 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold tracking-widest uppercase rounded-xl hover:text-white">
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Live products lists -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-serif text-sm font-bold text-slate-300 uppercase tracking-widest">— Live Catalog Items —</h4>
+                        <button onclick="restoreCatalogDefaults()" class="text-[10px] font-bold text-royalGold hover:underline uppercase tracking-wider">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Reset to Defaults
+                        </button>
+                    </div>
+                    <div id="admin-items-list" class="space-y-2">
+                        <!-- Admin products dynamic records -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cabinet Footer -->
+        <div class="p-6 border-t border-royalGold/15 bg-slate-950 flex justify-between items-center text-xs text-slate-400">
+            <span>Secure Admin Session</span>
+            <button onclick="handleAdminLogOut()" class="text-rose-400 hover:underline uppercase font-bold text-[10px]">Logout Cabinet</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-obsidian/90 py-12 px-4 border-t border-royalGold/10 relative z-10 pb-28">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <h3 class="font-serif text-xl font-bold tracking-widest text-royalGold mb-1">RS FASHION HUB</h3>
+                <p class="text-slate-400 text-xs font-light">Classic, royal & bespoke menswear of pristine quality.</p>
+            </div>
+            
+            <div class="flex items-center gap-6 text-[10px] tracking-widest uppercase text-slate-400 font-semibold">
+                <a href="#hero" class="hover:text-royalGold">Home</a>
+                <a href="#collections" class="hover:text-royalGold">Collections</a>
+                <a href="#about" class="hover:text-royalGold">Atelier</a>
+                <a href="#contact" class="hover:text-royalGold">Kalyan</a>
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto text-center mt-8 pt-8 border-t border-slate-900/40 text-[10px] text-slate-500">
+            &copy; 2026 RS Fashion Hub. Handcrafted Premium Wear. All Rights Reserved. <br>
+            Optimized with standalone mobile-compressor metrics.
+        </div>
+    </footer>
+
+    <!-- INTERACTION LOGIC & RENDERING SCRIPTS -->
+    <script>
+        // High-end signature catalog memory array with premium royalty-free images
+        const signatureDefaults = [
+            {
+                id: "prod-sherwani",
+                title: "The Imperial Sherwani",
+                category: "Exclusive Sherwanis",
+                price: 24500,
+                img: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop&q=80",
+                desc: "Hand-threaded signature Zardozi embroidery, designed with soft premium satin inner cuffs for ultimate groom majesty."
+            },
+            {
+                id: "prod-suit",
+                title: "The Monarch Suit",
+                category: "Classic Suits",
+                price: 18500,
+                img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&auto=format&fit=crop&q=80",
+                desc: "Double-breasted luxurious tailoring utilizing 100% fine wool-satin materials curated from bespoke mills."
+            },
+            {
+                id: "prod-casuals",
+                title: "Heritage Casuals",
+                category: "Premium Casuals",
+                price: 5200,
+                img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&auto=format&fit=crop&q=80",
+                desc: "Classic high-density soft linen shirt coupled with light-weight tailored travel pants for gentlemen style."
+            }
+        ];
+
+        // Database initialization
+        let globalCatalog = [];
+        let selectedSizes = {};
+        let activeAdminSession = false;
+
+        // Current compressed image base64 value storage
+        let currentCompressedImgBase64 = "";
+
+        // Custom Modal Confirm Handling State
+        let onConfirmAction = null;
+
+        // Load database safely
+        function initDatabase() {
+            const storedProducts = localStorage.getItem('rs_products');
+            if (storedProducts) {
+                globalCatalog = JSON.parse(storedProducts);
+            } else {
+                globalCatalog = [...signatureDefaults];
+                localStorage.setItem('rs_products', JSON.stringify(globalCatalog));
+            }
+        }
+
+        // Save active array state
+        function saveDatabase() {
+            localStorage.setItem('rs_products', JSON.stringify(globalCatalog));
+        }
+
+        // Custom Toast Helper
+        window.showToast = function(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastText.innerText = message;
+            if(type === 'success') {
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+                toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-emerald-950/95 border-emerald-500/40 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 shadow-xl";
+            } else {
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-400"></i>`;
+                toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-rose-950/95 border-rose-500/40 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 shadow-xl";
+            }
+
+            setTimeout(() => {
+                toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-slate-900 border-royalGold/30 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-[-100px] opacity-0 pointer-events-none";
+            }, 3000);
+        };
+
+        // Custom Confirmation dialog handler
+        window.showConfirmDialog = function(message, onConfirm) {
+            const modal = document.getElementById('confirm-modal');
+            const modalText = document.getElementById('confirm-modal-text');
+            modalText.innerText = message;
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            
+            onConfirmAction = onConfirm;
+        };
+
+        function closeConfirmDialog() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            onConfirmAction = null;
+        }
+
+        document.getElementById('confirm-modal-cancel').addEventListener('click', closeConfirmDialog);
+        document.getElementById('confirm-modal-ok').addEventListener('click', () => {
+            if (onConfirmAction) {
+                onConfirmAction();
+            }
+            closeConfirmDialog();
+        });
+
+        // Mobile Uploader Compressor Core Engine
+        window.compressAndPreviewFile = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            showToast("Compressing luxury look...", "success");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // Maximum dimensions for high performance mobile rendering (500px aspect-ratio preserving)
+                    const MAX_WIDTH = 500;
+                    const MAX_HEIGHT = 500;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    // Create canvas uploader
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // High efficiency compressed JPEG output (Quality 0.6)
+                    currentCompressedImgBase64 = canvas.toDataURL('image/jpeg', 0.6);
+
+                    // Show thumbnail area in form
+                    document.getElementById('admin-img-preview-container').classList.remove('hidden');
+                    document.getElementById('admin-img-preview-tag').src = currentCompressedImgBase64;
+                    
+                    // Approximate memory weight calculator
+                    const sizeInKb = Math.round((currentCompressedImgBase64.length * 3 / 4) / 1024);
+                    document.getElementById('admin-img-preview-size').innerText = `Size: ~${sizeInKb} KB (Compressed)`;
+                    
+                    showToast("Photo optimized successfully!", "success");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.clearSelectedPhoto = function() {
+            currentCompressedImgBase64 = "";
+            document.getElementById('admin-prod-file-input').value = "";
+            document.getElementById('admin-img-preview-container').classList.add('hidden');
+            document.getElementById('admin-img-preview-tag').src = "";
+            showToast("Photo cleared.", "success");
+        };
+
+        // Unique dynamic Href builder to make the WhatsApp links native and 100% clickable
+        window.updateWhatsAppHref = function(productId) {
+            const product = globalCatalog.find(p => p.id === productId);
+            if (!product) return;
+
+            const chosenSize = selectedSizes[productId] || 'M';
+            const messageTemplate = `👑 *RS FASHION HUB ORDER* 👑\n\nHello! I am exploring your classic 3D website lookbook and would like to place a custom order for:\n\n✨ *Product:* ${product.title}\n👔 *Category:* ${product.category}\n📏 *Size Chosen:* ${chosenSize}\n💰 *Price:* ₹${product.price.toLocaleString('en-IN')}\n\n_Please guide me with payment details and delivery scheduling timelines. Thank you!_`;
+            
+            const encodedText = encodeURIComponent(messageTemplate);
+            const targetUrl = `https://wa.me/918928703606?text=${encodedText}`;
+            
+            const linkElement = document.getElementById(`wa-link-${productId}`);
+            if (linkElement) {
+                linkElement.href = targetUrl;
+            }
+        };
+
+        // Size Selection Trigger Function
+        window.selectSize = function(productId, size) {
+            selectedSizes[productId] = size;
+            
+            // Highlight chosen variant visually
+            const buttons = document.querySelectorAll(`[data-prod-btn="${productId}"]`);
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-size') === size) {
+                    btn.className = "w-9 h-9 rounded-full border text-xs font-bold transition-all bg-royalGold text-obsidian border-royalGold shadow-md shadow-royalGold/20";
+                } else {
+                    btn.className = "w-9 h-9 rounded-full border text-xs font-bold transition-all bg-transparent text-slate-400 border-slate-800 hover:border-royalGold/40";
+                }
+            });
+
+            // Recalculate and update the link href natively
+            window.updateWhatsAppHref(productId);
+        };
+
+        // Build product layouts dynamically into DOM on load grid safely
+        function renderShowcaseGrid() {
+            const grid = document.getElementById('product-catalog-grid');
+            if (!grid) return;
+
+            grid.innerHTML = globalCatalog.map(p => {
+                const displayImage = displayImageSafe(p.img);
+                
+                return `
+                    <div class="luxury-glass flex flex-col justify-between group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 h-[550px]">
+                        <!-- Image Container with soft cover zoom -->
+                        <div class="relative w-full h-[220px] overflow-hidden rounded-t-[2rem] bg-slate-950">
+                            <img src="${displayImage}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500&auto=format&fit=crop&q=60';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/90 via-transparent to-transparent"></div>
+                            
+                            <!-- Floated luxury tags inside product frames -->
+                            <div class="absolute top-4 left-4 flex justify-between items-start w-[calc(100%-2rem)] pointer-events-none">
+                                <span class="text-[9px] tracking-widest uppercase px-3 py-1 bg-royalGold/80 border border-royalGold/30 text-obsidian rounded-full font-bold shadow-lg">${p.category}</span>
+                                <span class="text-royalGold text-lg font-serif font-bold bg-obsidian/70 backdrop-blur-md px-3 py-1 rounded-full border border-royalGold/20">₹${p.price.toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+
+                        <!-- Details Layer -->
+                        <div class="p-6 pt-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-serif text-lg font-bold tracking-wide text-slate-100 mb-1 group-hover:text-royalGold transition-colors duration-300 line-clamp-1">${p.title}</h3>
+                                <p class="text-slate-400 text-[11px] leading-relaxed mb-4 line-clamp-2">
+                                    ${p.desc}
+                                </p>
+
+                                <div class="flex items-center gap-3 mb-4 pt-2 border-t border-slate-900">
+                                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-semibold">Select Size:</span>
+                                    <div class="flex gap-2">
+                                        ${['S', 'M', 'L', 'XL'].map(size => {
+                                            const activeClass = size === 'M' ? 'border-royalGold text-royalGold bg-royalGold/10' : 'border-slate-800 text-slate-400';
+                                            return `
+                                                <button 
+                                                    data-prod-btn="${p.id}" 
+                                                    data-size="${size}" 
+                                                    onclick="selectSize('${p.id}', '${size}')" 
+                                                    class="w-9 h-9 rounded-full border text-xs font-bold transition-all duration-300 flex items-center justify-center hover:border-royalGold ${activeClass}">
+                                                    ${size}
+                                                </button>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <a id="wa-link-${p.id}" href="" target="_blank" rel="noopener noreferrer" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/20 rounded-2xl font-bold tracking-widest text-[10px] uppercase transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/20">
+                                    Order on WhatsApp <i class="fa-brands fa-whatsapp text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Initialize all product links immediately on startup
+            globalCatalog.forEach(p => {
+                window.updateWhatsAppHref(p.id);
+            });
+        }
+
+        // Image validation handler fallback
+        function displayImageSafe(imgUrl) {
+            if (!imgUrl || typeof imgUrl !== 'string' || imgUrl.trim() === '') {
+                return "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80";
+            }
+            return imgUrl;
+        }
+
+        // Render Admin controls table/list
+        function renderAdminProducts() {
+            const container = document.getElementById('admin-items-list');
+            if(!container) return;
+
+            if(globalCatalog.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-4">No products active.</p>`;
+                return;
+            }
+
+            container.innerHTML = globalCatalog.map(p => `
+                <div class="p-4 bg-slate-950 border border-slate-900 rounded-2xl flex justify-between items-center gap-3">
+                    <div class="flex items-center gap-3">
+                        <img src="${displayImageSafe(p.img)}" class="w-10 h-10 object-cover rounded-lg border border-slate-800" onerror="this.src='https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=100&auto=format&fit=crop&q=60';">
+                        <div>
+                            <p class="text-xs font-bold text-slate-200">${p.title}</p>
+                            <p class="text-[10px] text-royalGold">₹${p.price.toLocaleString('en-IN')} | ${p.category}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="editProductForm('${p.id}')" class="w-8 h-8 rounded-full bg-slate-900 text-royalGold flex items-center justify-center text-xs border border-royalGold/20 hover:border-royalGold"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteProductItem('${p.id}')" class="w-8 h-8 rounded-full bg-slate-900 text-rose-400 flex items-center justify-center text-xs border border-rose-950/40 hover:border-rose-500"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ADMIN ACCESS CONTROLS
+        window.openAdminAccessModal = function() {
+            if(activeAdminSession) {
+                toggleAdminCabinet();
+            } else {
+                document.getElementById('admin-pass-modal').classList.remove('opacity-0', 'pointer-events-none');
+            }
+        };
+
+        window.closeAdminAccessModal = function() {
+            document.getElementById('admin-pass-modal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.verifyAdminPassword = function(event) {
+            event.preventDefault();
+            const code = document.getElementById('admin-password-field').value;
+            if(code === "rsadmin7036") {
+                activeAdminSession = true;
+                closeAdminAccessModal();
+                showToast("Atelier Cabinet Authenticated.", "success");
+                toggleAdminCabinet();
+            } else {
+                showToast("Incorrect security code.", "error");
+            }
+        };
+
+        window.toggleAdminCabinet = function() {
+            const cabinet = document.getElementById('admin-cabinet');
+            cabinet.classList.toggle('cabinet-active');
+        };
+
+        window.closeAdminCabinet = function() {
+            document.getElementById('admin-cabinet').classList.remove('cabinet-active');
+        };
+
+        window.handleAdminLogOut = function() {
+            activeAdminSession = false;
+            document.getElementById('admin-password-field').value = "";
+            closeAdminCabinet();
+            showToast("Admin session disconnected.", "success");
+        };
+
+        // ADMIN FORM PRODUCTS
+        window.addOrUpdateProduct = function(event) {
+            event.preventDefault();
+            const id = document.getElementById('admin-prod-id').value;
+            const title = document.getElementById('admin-prod-title').value;
+            const price = parseFloat(document.getElementById('admin-prod-price').value);
+            const category = document.getElementById('admin-prod-category').value;
+            const desc = document.getElementById('admin-prod-desc').value;
+
+            // Use the compressed image base64 value or default fallback representation
+            const imgToSave = currentCompressedImgBase64 || "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80";
+
+            if(id) {
+                // Update existing item
+                const idx = globalCatalog.findIndex(p => p.id === id);
+                if(idx !== -1) {
+                    // If no new photo was compressed, retain previous photo
+                    const previousImg = globalCatalog[idx].img;
+                    globalCatalog[idx] = { 
+                        id, 
+                        title, 
+                        price, 
+                        category, 
+                        img: currentCompressedImgBase64 ? currentCompressedImgBase64 : previousImg, 
+                        desc 
+                    };
+                    showToast("Product successfully updated.", "success");
+                }
+            } else {
+                // Add new item
+                const newId = "prod-" + Date.now();
+                globalCatalog.push({ id: newId, title, price, category, img: imgToSave, desc });
+                showToast("Product successfully added to catalog.", "success");
+            }
+
+            saveDatabase();
+            renderShowcaseGrid();
+            renderAdminProducts();
+            resetAdminProductForm();
+        };
+
+        window.editProductForm = function(id) {
+            const p = globalCatalog.find(prod => prod.id === id);
+            if(!p) return;
+
+            document.getElementById('admin-prod-id').value = p.id;
+            document.getElementById('admin-prod-title').value = p.title;
+            document.getElementById('admin-prod-price').value = p.price;
+            document.getElementById('admin-prod-category').value = p.category;
+            document.getElementById('admin-prod-desc').value = p.desc;
+
+            // Retain image preview settings
+            if (p.img) {
+                currentCompressedImgBase64 = p.img;
+                document.getElementById('admin-img-preview-container').classList.remove('hidden');
+                document.getElementById('admin-img-preview-tag').src = p.img;
+                
+                const approximateSize = p.img.startsWith('data:') ? Math.round((p.img.length * 3 / 4) / 1024) : 40;
+                document.getElementById('admin-img-preview-size').innerText = `Size: ~${approximateSize} KB`;
+            } else {
+                clearSelectedPhoto();
+            }
+
+            document.getElementById('product-form-submit').innerText = "Update Product";
+            showToast("Product loaded in editor form.", "success");
+        };
+
+        window.deleteProductItem = function(id) {
+            const p = globalCatalog.find(prod => prod.id === id);
+            if(!p) return;
+
+            showConfirmDialog(`Are you sure you want to remove "${p.title}"?`, () => {
+                globalCatalog = globalCatalog.filter(prod => prod.id !== id);
+                saveDatabase();
+                renderShowcaseGrid();
+                renderAdminProducts();
+                showToast("Product removed from catalog.", "success");
+            });
+        };
+
+        window.restoreCatalogDefaults = function() {
+            showConfirmDialog("Restore default Sherwanis, Suits, and Casuals? This will reset custom edits.", () => {
+                globalCatalog = [...signatureDefaults];
+                saveDatabase();
+                renderShowcaseGrid();
+                renderAdminProducts();
+                showToast("Catalog reset to defaults successfully.", "success");
+            });
+        };
+
+        window.resetAdminProductForm = function() {
+            document.getElementById('add-product-form').reset();
+            document.getElementById('admin-prod-id').value = "";
+            document.getElementById('product-form-submit').innerText = "Create Entry";
+            clearSelectedPhoto();
+        };
+
+        // Initialize database immediately
+        initDatabase();
+        renderShowcaseGrid();
+        renderAdminProducts();
+
+        // Elegant Dynamic Header Shrink Trigger
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 40) {
+                header.classList.add('py-2');
+            } else {
+                header.classList.remove('py-2');
+            }
+        });
+    </script>
+
+    <!-- THREE.JS INTERACTIVE 3D BACKGROUND SCENE -->
+    <script>
+        let scene, camera, renderer, particles, floatingShapes = [];
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        function init3D() {
+            const canvas = document.getElementById('threejs-canvas');
+            scene = new THREE.Scene();
+            
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 15;
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const ambientLight = new THREE.AmbientLight(0x0c1020, 1.8);
+            scene.add(ambientLight);
+
+            const goldLight = new THREE.DirectionalLight(0xd4af37, 2.5);
+            goldLight.position.set(5, 5, 5);
+            scene.add(goldLight);
+
+            const fillLight = new THREE.DirectionalLight(0x5a3aa3, 2.0);
+            fillLight.position.set(-5, -5, 2);
+            scene.add(fillLight);
+
+            const goldMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xd4af37,
+                metalness: 0.9,
+                roughness: 0.15,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                reflectivity: 0.8
+            });
+
+            // Torus Ring
+            const torusGeo = new THREE.TorusGeometry(2.2, 0.6, 16, 100);
+            const torusMesh = new THREE.Mesh(torusGeo, goldMaterial);
+            torusMesh.position.set(-5, 2, -2);
+            scene.add(torusMesh);
+            floatingShapes.push({ mesh: torusMesh, speedX: 0.004, speedY: 0.003 });
+
+            // Sphere Ball
+            const sphereGeo = new THREE.SphereGeometry(1.5, 64, 64);
+            const sphereMesh = new THREE.Mesh(sphereGeo, goldMaterial);
+            sphereMesh.position.set(6, -3, -4);
+            scene.add(sphereMesh);
+            floatingShapes.push({ mesh: sphereMesh, speedX: -0.002, speedY: 0.005 });
+
+            // Backdrop Star Dust Particles
+            const particleCount = 200;
+            const particleGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for(let i = 0; i < particleCount * 3; i+=3) {
+                positions[i] = (Math.random() - 0.5) * 45;
+                positions[i+1] = (Math.random() - 0.5) * 45;
+                positions[i+2] = (Math.random() - 0.5) * 20;
+
+                colors[i] = 0.85 + Math.random() * 0.15;
+                colors[i+1] = 0.7 + Math.random() * 0.15;
+                colors[i+2] = 0.3 + Math.random() * 0.2;
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const canvasTex = document.createElement('canvas');
+            canvasTex.width = 16;
+            canvasTex.height = 16;
+            const ctx = canvasTex.getContext('2d');
+            const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+            grad.addColorStop(0, 'rgba(255,255,255,1)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 16, 16);
+            const particleTexture = new THREE.CanvasTexture(canvasTex);
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.15,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                map: particleTexture,
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            animate3D();
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('touchmove', onTouchMove, { passive: true });
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) / 100;
+            mouseY = (event.clientY - windowHalfY) / 100;
+        }
+
+        function onTouchMove(event) {
+            if (event.touches.length === 1) {
+                mouseX = (event.touches[0].clientX - windowHalfX) / 100;
+                mouseY = (event.touches[0].clientY - windowHalfY) / 100;
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+
+            camera.position.x = targetX * 0.3;
+            camera.position.y = -targetY * 0.3;
+            camera.lookAt(scene.position);
+
+            floatingShapes.forEach((item, index) => {
+                item.mesh.rotation.x += item.speedX;
+                item.mesh.rotation.y += item.speedY;
+                item.mesh.position.y += Math.sin(Date.now() * 0.001 + index) * 0.003;
+            });
+
+            if (particles) {
+                particles.rotation.y += 0.0005;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            init3D();
+            gsap.from("#hero h1", { duration: 1.2, opacity: 0, y: 40, ease: "power4.out" });
+            gsap.from("#hero p", { duration: 1.2, opacity: 0, y: 20, delay: 0.2, ease: "power4.out" });
+        });
+    </script>
+</body>
+</html>
