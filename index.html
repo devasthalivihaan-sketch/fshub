@@ -78,7 +78,7 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 2rem; /* No sharp edges anywhere */
+            border-radius: 2rem;
         }
         
         .luxury-glass:hover {
@@ -100,15 +100,20 @@
         }
     </style>
 </head>
-<body class="bg-obsidian text-slate-100 overflow-x-hidden font-sans selection:bg-royalGold selection:text-obsidian">
+<body class="bg-obsidian text-slate-100 overflow-x-hidden font-sans selection:bg-royalGold selection:text-obsidian pt-8">
+
+    <!-- Elegant Fixed Top Location Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 bg-slate-950/90 border-b border-royalGold/15 py-2 px-4 text-center text-[9px] md:text-[10px] tracking-widest text-royalGold uppercase font-semibold">
+        <i class="fa-solid fa-map-pin mr-1.5 text-royalGold-shimmer"></i> Ayre Road, Opp to Om Bungalow, Dombivli East
+    </div>
 
     <!-- Premium Toast / Live Notifications -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-slate-900 border-royalGold/30 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-[-200%]">
+    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-slate-900 border-royalGold/30 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-[-100px] opacity-0 pointer-events-none">
         <span id="toast-icon" class="text-royalGold text-lg"><i class="fa-solid fa-bell"></i></span>
         <span id="toast-text" class="text-xs font-semibold uppercase tracking-wider text-slate-200">Processing...</span>
     </div>
 
-    <!-- Custom Luxury Confirmation Modal (Replaces Browser Confirm Alerts) -->
+    <!-- Custom Luxury Confirmation Modal -->
     <div id="confirm-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-obsidian/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
         <div class="luxury-glass max-w-sm w-full p-6 text-center border border-royalGold/20">
             <div class="w-12 h-12 bg-rose-500/10 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
@@ -131,7 +136,7 @@
     <div class="fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-velvetBlue glow-blob -z-20"></div>
 
     <!-- HEADER / NAVIGATION -->
-    <header class="fixed top-0 left-0 w-full z-40 px-4 py-3 md:py-5 transition-all duration-300" id="main-header">
+    <header class="fixed top-8 left-0 w-full z-40 px-4 py-3 md:py-5 transition-all duration-300" id="main-header">
         <nav class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 luxury-glass bg-obsidian/75 rounded-full shadow-lg border border-royalGold/10">
             <!-- Brand Logo -->
             <a href="#" class="flex items-center gap-2 group">
@@ -150,7 +155,7 @@
 
             <!-- Header Quick Call Button -->
             <div>
-                <a href="tel:8928703606" class="flex items-center gap-2 bg-gradient-to-r from-royalGold-dark to-royalGold px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest text-obsidian font-bold">
+                <a href="tel:8928703606" class="flex items-center gap-2 bg-gradient-to-r from-royalGold-dark to-royalGold px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest text-obsidian hover:shadow-lg transition-all border border-royalGold-light/20">
                     <i class="fa-solid fa-phone"></i> Call Now
                 </a>
             </div>
@@ -176,10 +181,10 @@
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#collections" class="w-full sm:w-auto px-8 py-4 rounded-3xl bg-gradient-to-r from-royalGold via-royalGold-shimmer to-royalGold-dark text-obsidian font-bold tracking-widest text-xs">
+                <a href="#collections" class="w-full sm:w-auto px-8 py-4 rounded-3xl bg-gradient-to-r from-royalGold via-royalGold-shimmer to-royalGold-dark text-obsidian font-bold tracking-widest text-xs uppercase hover:shadow-2xl hover:shadow-royalGold/40 transition-all duration-300 text-center">
                     Browse Collections <i class="fa-solid fa-arrow-right ml-2"></i>
                 </a>
-                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-3xl bg-slate-900/40 backdrop-blur-md border border-royalGold/20 text-royalGold hover:bg-royalGold hover:text-obsidian font-bold tracking-widest text-xs">
+                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-3xl bg-slate-900/40 backdrop-blur-md border border-royalGold/20 text-royalGold hover:bg-royalGold hover:text-obsidian font-bold tracking-widest text-xs uppercase transition-all duration-300 text-center">
                     Visit Location <i class="fa-solid fa-map-location-dot ml-2"></i>
                 </a>
             </div>
@@ -208,7 +213,7 @@
                 <span class="text-royalGold text-xs font-semibold tracking-widest uppercase block">— BESPOKE FITTING —</span>
                 <h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight leading-tight">Crafting Your Elegant Identity</h2>
                 <p class="text-slate-300 leading-relaxed font-light text-sm">
-                    Clothing is your visual calling card. Our design room blends age-old traditional craftsmanship with ultra-sharp modern silhouettes. Every outfit is crafted using materials of premium quality.
+                    Clothing is your visual calling card. Our design room blends age-old traditional craftsmanship with ultra-sharp modern silhouettes. Every outfit is crafted using materials of premium origin.
                 </p>
 
                 <div class="grid sm:grid-cols-2 gap-4 pt-4">
@@ -234,18 +239,18 @@
             <div class="relative flex items-center justify-center p-4">
                 <div class="absolute inset-0 bg-gradient-to-tr from-royalGold/10 via-transparent to-velvetBlue/40 rounded-[2.5rem] filter blur-xl"></div>
                 <div class="relative w-full max-w-md luxury-glass p-8 text-center pulse-gold-glow border border-royalGold/20">
-                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-tr from-royalGold-dark to-royalGold rounded-full flex items-center justify-center text-obsidian font-bold text-xl">
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-tr from-royalGold-dark to-royalGold rounded-full flex items-center justify-center text-obsidian font-bold text-lg">
                         <i class="fa-solid fa-crown"></i>
                     </div>
                     <h3 class="font-serif text-2xl font-bold mt-4 mb-3 text-royalGold">Consult Our Stylist</h3>
                     <p class="text-slate-300 text-xs leading-relaxed mb-6">
-                        Need help finding your exact size or designing a custom wedding outfit? Connect directly with our lead tailor in Kalyan.
+                        Need help finding your exact size or designing a custom wedding outfit? Connect directly with our lead tailor in Dombivli East.
                     </p>
                     <div class="space-y-3">
-                        <a href="tel:8928703606" class="w-full py-3.5 flex items-center justify-center gap-3 bg-gradient-to-r from-royalGold to-amber-500 rounded-2xl text-obsidian font-bold text-xs tracking-widest uppercase">
+                        <a href="tel:8928703606" class="w-full py-3.5 flex items-center justify-center gap-3 bg-gradient-to-r from-royalGold to-amber-500 rounded-2xl text-obsidian font-bold text-xs tracking-widest uppercase transition-transform hover:scale-[1.02]">
                             <i class="fa-solid fa-phone"></i> Direct Call: 8928703606
                         </a>
-                        <a href="https://wa.me/918928703606?text=Hi!%20I'd%20like%20to%20book%20a%20private%20custom%20clothing%20fitting%20appointment." target="_blank" rel="noopener noreferrer" class="w-full py-3.5 flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl text-white font-bold text-xs tracking-widest uppercase">
+                        <a href="https://wa.me/918928703606?text=Hi!%20I'd%20like%20to%20book%20a%20private%20custom%20clothing%20fitting%20appointment." target="_blank" rel="noopener noreferrer" class="w-full py-3.5 flex items-center justify-center gap-3 bg-slate-900/80 rounded-2xl border border-royalGold/20 hover:border-royalGold text-royalGold font-bold text-xs tracking-widest uppercase transition-transform hover:scale-[1.02]">
                             <i class="fa-brands fa-whatsapp text-lg"></i> Inquire via WhatsApp
                         </a>
                     </div>
@@ -254,12 +259,12 @@
         </div>
     </section>
 
-    <!-- SHOWROOM LOCATION SECTION -->
+    <!-- MAP & SHOWROOM SECTION -->
     <section id="contact" class="py-20 px-4 relative z-10">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12">
                 <span class="text-royalGold text-xs font-semibold tracking-widest uppercase block mb-2">— ATELIER MAP —</span>
-                <h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight">Kalyan Showroom</h2>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight">Dombivli Showroom</h2>
                 <div class="w-24 h-[2px] bg-gradient-to-r from-transparent via-royalGold to-transparent mx-auto mt-4"></div>
             </div>
 
@@ -276,7 +281,7 @@
                                 <div>
                                     <p class="text-[10px] uppercase tracking-widest text-slate-400">Atelier Location</p>
                                     <p class="text-slate-200 text-sm mt-1 leading-relaxed">
-                                        Kalyan, Maharashtra, India.
+                                        Ayre Road, Opp to Om Bungalow, Dombivli East, Maharashtra, India.
                                     </p>
                                 </div>
                             </div>
@@ -312,14 +317,14 @@
                         <div class="relative h-44 rounded-2xl bg-slate-900 border border-royalGold/15 overflow-hidden flex items-center justify-center group-hover:border-royalGold/30 transition-all">
                             <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
                             <div class="relative text-center z-10 flex flex-col items-center">
-                                <div class="w-14 h-14 bg-gradient-to-tr from-royalGold-dark to-royalGold text-obsidian rounded-full flex items-center justify-center text-xl shadow-xl animate-bounce mb-2">
+                                <div class="w-14 h-14 bg-gradient-to-tr from-royalGold-dark to-royalGold text-obsidian rounded-full flex items-center justify-center text-xl shadow-xl animate-bounce mb-3">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
-                                <span class="text-xs tracking-widest uppercase text-royalGold font-bold">Launch Kalyan Store</span>
+                                <span class="text-xs tracking-widest uppercase text-royalGold font-bold">Launch Dombivli Store</span>
                             </div>
                         </div>
 
-                        <a href="https://maps.app.goo.gl/qb17QzEQoFpdjQgQA" target="_blank" rel="noopener noreferrer" class="w-full py-4 bg-gradient-to-r from-royalGold-dark to-royalGold text-obsidian font-bold tracking-widest text-xs rounded-2xl uppercase flex items-center justify-center gap-2">
+                        <a href="https://maps.app.goo.gl/qb17QzEQoFpdjQgQA" target="_blank" rel="noopener noreferrer" class="w-full py-4 bg-gradient-to-r from-royalGold-dark to-royalGold text-obsidian font-extrabold text-xs tracking-widest uppercase rounded-2xl shadow-lg hover:scale-[1.01] transition-transform text-center">
                             Launch Map Directions <i class="fa-solid fa-map-location-dot ml-2"></i>
                         </a>
                     </div>
@@ -338,10 +343,10 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <a href="tel:8928703606" class="px-4 py-2.5 bg-gradient-to-r from-royalGold-dark to-royalGold text-obsidian rounded-xl text-[10px] font-bold tracking-widest uppercase flex items-center gap-1">
+            <a href="tel:8928703606" class="px-4 py-2.5 bg-gradient-to-r from-royalGold-dark to-royalGold text-obsidian rounded-xl text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 transition-transform hover:scale-105">
                 <i class="fa-solid fa-phone"></i> Call
             </a>
-            <a href="https://wa.me/918928703606" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[10px] font-bold tracking-widest uppercase flex items-center gap-1">
+            <a href="https://wa.me/918928703606" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 transition-transform hover:scale-105">
                 <i class="fa-brands fa-whatsapp"></i> WhatsApp
             </a>
         </div>
@@ -349,14 +354,14 @@
 
     <!-- FLOATING ADMIN ENTRY POINT LOCK ICON -->
     <div class="fixed bottom-24 right-6 z-40">
-        <button onclick="openAdminAccessModal()" class="w-12 h-12 rounded-full bg-slate-950 border-2 border-royalGold text-royalGold hover:bg-royalGold hover:text-obsidian flex items-center justify-center transition-all duration-300">
+        <button onclick="openAdminAccessModal()" class="w-12 h-12 rounded-full bg-slate-950 border-2 border-royalGold text-royalGold hover:bg-royalGold hover:text-obsidian flex items-center justify-center text-lg shadow-xl pulse-gold-glow transition-all" title="Admin Control Room">
             <i class="fa-solid fa-lock"></i>
         </button>
     </div>
 
     <!-- ADMIN PASSWORD ACCESS DIALOG -->
     <div id="admin-pass-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="luxury-glass max-w-sm w-full bg-slate-950 border border-royalGold/30 p-8 relative text-center">
+        <div class="luxury-glass max-w-sm w-full bg-slate-950 border-royalGold/30 p-8 relative text-center">
             <button onclick="closeAdminAccessModal()" class="absolute top-6 right-6 text-slate-400 hover:text-royalGold text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -367,8 +372,7 @@
             <p class="text-slate-400 text-[10px] uppercase tracking-widest mt-1 mb-6">Enter secure credentials</p>
 
             <form onsubmit="verifyAdminPassword(event)" class="space-y-4">
-                <input type="password" id="admin-password-field" required class="w-full bg-slate-900 border border-royalGold/20 rounded-xl p-3 text-xs text-center text-slate-200 focus:outline-none focus:border-royalGold/50 placeholder-slate-600">
-                <p class="text-[9px] text-slate-500 leading-normal">Default system authorization code: <strong class="text-royalGold">rsadmin7036</strong></p>
+                <input type="password" id="admin-password-field" required class="w-full bg-slate-900 border border-royalGold/20 rounded-xl p-3 text-xs text-center text-slate-200 focus:outline-none focus:border-royalGold" placeholder="Enter Access Key...">
                 <button type="submit" class="w-full py-3 bg-gradient-to-r from-royalGold to-amber-500 text-obsidian text-xs font-bold tracking-widest uppercase rounded-xl">
                     Authorize Access
                 </button>
@@ -376,8 +380,8 @@
         </div>
     </div>
 
-    <!-- FULL ADMIN CONTROL CABINET (DYNAMIC DRAWER PANEL) -->
-    <div id="admin-cabinet" class="fixed top-0 left-0 h-full w-full lg:w-[650px] z-50 bg-obsidian/98 border-r border-royalGold/20 -translate-x-full transition-transform duration-500 ease-out flex flex-col overflow-hidden">
+    <!-- FULL ADMIN CONTROL CABINET -->
+    <div id="admin-cabinet" class="fixed top-0 left-0 h-full w-full lg:w-[650px] z-50 bg-obsidian/98 border-r border-royalGold/20 -translate-x-full transition-transform duration-500 ease-out flex flex-col shadow-2xl justify-between">
         <!-- Cabinet Header -->
         <div class="p-6 border-b border-royalGold/15 flex justify-between items-center bg-slate-950">
             <div>
@@ -395,8 +399,8 @@
         <div class="flex-1 overflow-y-auto p-6 space-y-6">
             <!-- TAB: PRODUCTS PANEL -->
             <div id="admin-tab-products" class="space-y-6">
-                <!-- Add product form trigger header -->
-                <div class="luxury-glass p-5 border border-royalGold/20 bg-slate-900/30">
+                <!-- Add product form -->
+                <div class="luxury-glass p-5 border-royalGold/20 bg-slate-900/30">
                     <h4 class="font-serif text-md font-bold text-slate-200 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-circle-plus text-royalGold"></i> Add/Edit Luxury Apparel
                     </h4>
@@ -406,18 +410,18 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Outfit Title</label>
-                                <input type="text" id="admin-prod-title" required class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold/50" placeholder="e.g., Royal Sherwani">
+                                <input type="text" id="admin-prod-title" required class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold" placeholder="e.g. Royal Silk Sherwani">
                             </div>
                             <div>
                                 <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Pricing (INR)</label>
-                                <input type="number" id="admin-prod-price" required class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold/50" placeholder="5000">
+                                <input type="number" id="admin-prod-price" required class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold" placeholder="e.g. 18500">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Luxury Category</label>
-                                <select id="admin-prod-category" class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold/50">
+                                <select id="admin-prod-category" class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold">
                                     <option value="Exclusive Sherwanis">Imperial Sherwanis</option>
                                     <option value="Classic Suits">Monarch Suits</option>
                                     <option value="Premium Casuals">Heritage Casuals</option>
@@ -425,9 +429,9 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Upload Photo (Mobile Gallery/Camera)</label>
+                                <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Upload Photo</label>
                                 <div class="flex items-center gap-2">
-                                    <button type="button" onclick="document.getElementById('admin-prod-file-input').click()" class="w-full py-2.5 bg-slate-950 border border-royalGold/30 hover:border-royalGold/50 text-royalGold rounded-xl text-xs font-bold tracking-widest uppercase">
+                                    <button type="button" onclick="document.getElementById('admin-prod-file-input').click()" class="w-full py-2.5 bg-slate-950 border border-royalGold/30 hover:border-royalGold rounded-xl text-xs font-semibold text-royalGold flex items-center justify-center gap-2 transition-all">
                                         <i class="fa-solid fa-cloud-arrow-up"></i> Select Photo
                                     </button>
                                     <input type="file" id="admin-prod-file-input" accept="image/*" class="hidden" onchange="compressAndPreviewFile(this)">
@@ -439,9 +443,7 @@
                         <div id="admin-img-preview-container" class="hidden p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center gap-4">
                             <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-royalGold/20">
                                 <img id="admin-img-preview-tag" src="" class="w-full h-full object-cover">
-                                <button type="button" onclick="clearSelectedPhoto()" class="absolute top-0 right-0 w-5 h-5 bg-rose-600/90 text-white rounded-bl-lg flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
+                                <button type="button" onclick="clearSelectedPhoto()" class="absolute top-0 right-0 w-5 h-5 bg-rose-600/90 text-white rounded-bl-lg flex items-center justify-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <div>
                                 <p class="text-[10px] font-bold text-slate-300 uppercase">Compressed Successfully</p>
@@ -451,14 +453,14 @@
 
                         <div>
                             <label class="block text-[9px] uppercase tracking-widest text-slate-400 mb-1">Product Description</label>
-                            <textarea id="admin-prod-desc" required rows="2" class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold/50 placeholder-slate-600" placeholder="Premium tailoring..."></textarea>
+                            <textarea id="admin-prod-desc" required rows="2" class="w-full bg-slate-950 border border-royalGold/20 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-royalGold" placeholder="Premium features..."></textarea>
                         </div>
 
                         <div class="flex gap-2 pt-2">
-                            <button type="submit" id="product-form-submit" class="flex-1 py-3 bg-gradient-to-r from-royalGold to-amber-500 text-obsidian text-xs font-bold tracking-widest uppercase rounded-xl hover:opacity-90">
+                            <button type="submit" id="product-form-submit" class="flex-1 py-3 bg-gradient-to-r from-royalGold to-amber-500 text-obsidian text-xs font-bold tracking-widest uppercase rounded-xl">
                                 Create Entry
                             </button>
-                            <button type="button" onclick="resetAdminProductForm()" class="px-4 py-3 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold tracking-widest uppercase rounded-xl hover:border-slate-700">
+                            <button type="button" onclick="resetAdminProductForm()" class="px-4 py-3 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold tracking-widest uppercase rounded-xl hover:text-white">
                                 Reset
                             </button>
                         </div>
@@ -499,7 +501,7 @@
                 <a href="#hero" class="hover:text-royalGold">Home</a>
                 <a href="#collections" class="hover:text-royalGold">Collections</a>
                 <a href="#about" class="hover:text-royalGold">Atelier</a>
-                <a href="#contact" class="hover:text-royalGold">Kalyan</a>
+                <a href="#contact" class="hover:text-royalGold">Dombivli</a>
             </div>
         </div>
         
@@ -511,7 +513,7 @@
 
     <!-- INTERACTION LOGIC & RENDERING SCRIPTS -->
     <script>
-        // High-end signature catalog memory array with premium royalty-free images
+        // High-end signature catalog memory array
         const signatureDefaults = [
             {
                 id: "prod-sherwani",
@@ -543,11 +545,7 @@
         let globalCatalog = [];
         let selectedSizes = {};
         let activeAdminSession = false;
-
-        // Current compressed image base64 value storage
         let currentCompressedImgBase64 = "";
-
-        // Custom Modal Confirm Handling State
         let onConfirmAction = null;
 
         // Load database safely
@@ -575,16 +573,14 @@
             toastText.innerText = message;
             if(type === 'success') {
                 toastIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
-                toast.style.transform = 'translateY(0)';
-                toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-emerald-950/95 border-emerald-500/40 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300";
+                toast.className = "fixed top-12 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-emerald-950/95 border-emerald-500/40 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 shadow-xl";
             } else {
                 toastIcon.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-400"></i>`;
-                toast.style.transform = 'translateY(0)';
-                toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-rose-950/95 border-rose-500/40 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300";
+                toast.className = "fixed top-12 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-rose-950/95 border-rose-500/40 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 shadow-xl";
             }
 
             setTimeout(() => {
-                toast.style.transform = 'translateY(-200%)';
+                toast.className = "fixed top-12 left-1/2 -translate-x-1/2 z-[100] luxury-glass bg-slate-900 border-royalGold/30 p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-[-100px] opacity-0 pointer-events-none";
             }, 3000);
         };
 
@@ -594,7 +590,6 @@
             const modalText = document.getElementById('confirm-modal-text');
             modalText.innerText = message;
             modal.classList.remove('opacity-0', 'pointer-events-none');
-            
             onConfirmAction = onConfirm;
         };
 
@@ -623,7 +618,6 @@
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    // Maximum dimensions for high performance mobile rendering (500px aspect-ratio preserving)
                     const MAX_WIDTH = 500;
                     const MAX_HEIGHT = 500;
                     let width = img.width;
@@ -641,7 +635,6 @@
                         }
                     }
 
-                    // Create canvas uploader
                     const canvas = document.createElement('canvas');
                     canvas.width = width;
                     canvas.height = height;
@@ -649,14 +642,11 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // High efficiency compressed JPEG output (Quality 0.6)
                     currentCompressedImgBase64 = canvas.toDataURL('image/jpeg', 0.6);
 
-                    // Show thumbnail area in form
                     document.getElementById('admin-img-preview-container').classList.remove('hidden');
                     document.getElementById('admin-img-preview-tag').src = currentCompressedImgBase64;
                     
-                    // Approximate memory weight calculator
                     const sizeInKb = Math.round((currentCompressedImgBase64.length * 3 / 4) / 1024);
                     document.getElementById('admin-img-preview-size').innerText = `Size: ~${sizeInKb} KB (Compressed)`;
                     
@@ -675,7 +665,7 @@
             showToast("Photo cleared.", "success");
         };
 
-        // Unique dynamic Href builder to make the WhatsApp links native and 100% clickable
+        // Update WhatsApp Href
         window.updateWhatsAppHref = function(productId) {
             const product = globalCatalog.find(p => p.id === productId);
             if (!product) return;
@@ -696,7 +686,6 @@
         window.selectSize = function(productId, size) {
             selectedSizes[productId] = size;
             
-            // Highlight chosen variant visually
             const buttons = document.querySelectorAll(`[data-prod-btn="${productId}"]`);
             buttons.forEach(btn => {
                 if (btn.getAttribute('data-size') === size) {
@@ -706,11 +695,10 @@
                 }
             });
 
-            // Recalculate and update the link href natively
             window.updateWhatsAppHref(productId);
         };
 
-        // Build product layouts dynamically into DOM on load grid safely
+        // Build product layouts dynamically
         function renderShowcaseGrid() {
             const grid = document.getElementById('product-catalog-grid');
             if (!grid) return;
@@ -720,19 +708,16 @@
                 
                 return `
                     <div class="luxury-glass flex flex-col justify-between group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 h-[550px]">
-                        <!-- Image Container with soft cover zoom -->
                         <div class="relative w-full h-[220px] overflow-hidden rounded-t-[2rem] bg-slate-950">
                             <img src="${displayImage}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-obsidian/90 via-transparent to-transparent"></div>
                             
-                            <!-- Floated luxury tags inside product frames -->
                             <div class="absolute top-4 left-4 flex justify-between items-start w-[calc(100%-2rem)] pointer-events-none">
                                 <span class="text-[9px] tracking-widest uppercase px-3 py-1 bg-royalGold/80 border border-royalGold/30 text-obsidian rounded-full font-bold shadow-lg">${p.category}</span>
                                 <span class="text-royalGold text-lg font-serif font-bold bg-obsidian/70 backdrop-blur-md px-3 py-1 rounded-full border border-royalGold/20">₹${p.price.toLocaleString('en-IN')}</span>
                             </div>
                         </div>
 
-                        <!-- Details Layer -->
                         <div class="p-6 pt-2 flex-1 flex flex-col justify-between">
                             <div>
                                 <h3 class="font-serif text-lg font-bold tracking-wide text-slate-100 mb-1 group-hover:text-royalGold transition-colors duration-300 line-clamp-1">${p.title}</h3>
@@ -769,13 +754,12 @@
                 `;
             }).join('');
 
-            // Initialize all product links immediately on startup
             globalCatalog.forEach(p => {
                 window.updateWhatsAppHref(p.id);
             });
         }
 
-        // Image validation handler fallback
+        // Image validation handler
         function displayImageSafe(imgUrl) {
             if (!imgUrl || typeof imgUrl !== 'string' || imgUrl.trim() === '') {
                 return "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80";
@@ -783,7 +767,7 @@
             return imgUrl;
         }
 
-        // Render Admin controls table/list
+        // Render Admin products table
         function renderAdminProducts() {
             const container = document.getElementById('admin-items-list');
             if(!container) return;
@@ -865,14 +849,11 @@
             const category = document.getElementById('admin-prod-category').value;
             const desc = document.getElementById('admin-prod-desc').value;
 
-            // Use the compressed image base64 value or default fallback representation
             const imgToSave = currentCompressedImgBase64 || "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80";
 
             if(id) {
-                // Update existing item
                 const idx = globalCatalog.findIndex(p => p.id === id);
                 if(idx !== -1) {
-                    // If no new photo was compressed, retain previous photo
                     const previousImg = globalCatalog[idx].img;
                     globalCatalog[idx] = { 
                         id, 
@@ -885,7 +866,6 @@
                     showToast("Product successfully updated.", "success");
                 }
             } else {
-                // Add new item
                 const newId = "prod-" + Date.now();
                 globalCatalog.push({ id: newId, title, price, category, img: imgToSave, desc });
                 showToast("Product successfully added to catalog.", "success");
@@ -907,7 +887,6 @@
             document.getElementById('admin-prod-category').value = p.category;
             document.getElementById('admin-prod-desc').value = p.desc;
 
-            // Retain image preview settings
             if (p.img) {
                 currentCompressedImgBase64 = p.img;
                 document.getElementById('admin-img-preview-container').classList.remove('hidden');
